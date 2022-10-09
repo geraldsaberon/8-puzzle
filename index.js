@@ -22,7 +22,7 @@ function drawTiles() {
 let tiles = drawTiles();
 
 
-//  
+//  add tile number and move function
 for (let i=0; i<9; i++) {
     tiles[i].id = `_${i}`;
     tiles[i].textContent = i;
@@ -34,18 +34,16 @@ for (let i=0; i<9; i++) {
 let emptyTile = tiles[0];
 
 function moveTile() {
-    console.log("number", this.textContent, ", gridColumn", this.style.gridColumn, ", gridRow", this.style.gridRow)
+    // console.log("number", this.textContent, ", gridColumn", this.style.gridColumn, ", gridRow", this.style.gridRow)
     let col = parseInt(this.style.gridColumn);
     let row = parseInt(this.style.gridRow);
     let emptycol = parseInt(emptyTile.style.gridColumn);
     let emptyrow = parseInt(emptyTile.style.gridRow);
     let x = (col+row)-(emptycol+emptyrow)
-    if (x == 1 || x == -1) {
-        console.log("yo")
-        this.style.gridColumn = emptyTile.style.gridColumn;
-        this.style.gridRow = emptyTile.style.gridRow;
-        emptyTile.style.gridColumn = col; 
-        emptyTile.style.gridRow = row; 
+    console.log(x)
+    if ((x == 1 || x == -1) && (col == emptycol || row == emptyrow)) {
+        [this.style.gridColumn, emptyTile.style.gridColumn] = [emptyTile.style.gridColumn, this.style.gridColumn];
+        [this.style.gridRow, emptyTile.style.gridRow] = [emptyTile.style.gridRow, this.style.gridRow];
     }
 }
 
