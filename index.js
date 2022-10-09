@@ -31,19 +31,19 @@ for (let i=0; i<9; i++) {
 
 
 //
-let emptyTile = tiles[0];
+let blankTile = tiles[0];
 
 function moveTile() {
     // console.log("number", this.textContent, ", gridColumn", this.style.gridColumn, ", gridRow", this.style.gridRow)
     let col = parseInt(this.style.gridColumn);
     let row = parseInt(this.style.gridRow);
-    let emptycol = parseInt(emptyTile.style.gridColumn);
-    let emptyrow = parseInt(emptyTile.style.gridRow);
+    let emptycol = parseInt(blankTile.style.gridColumn);
+    let emptyrow = parseInt(blankTile.style.gridRow);
     let x = (col+row)-(emptycol+emptyrow)
     console.log(x)
     if ((x == 1 || x == -1) && (col == emptycol || row == emptyrow)) {
-        [this.style.gridColumn, emptyTile.style.gridColumn] = [emptyTile.style.gridColumn, this.style.gridColumn];
-        [this.style.gridRow, emptyTile.style.gridRow] = [emptyTile.style.gridRow, this.style.gridRow];
+        [this.style.gridColumn, blankTile.style.gridColumn] = [blankTile.style.gridColumn, this.style.gridColumn];
+        [this.style.gridRow, blankTile.style.gridRow] = [blankTile.style.gridRow, this.style.gridRow];
     }
 }
 
