@@ -1,0 +1,47 @@
+* {
+    font-family: sans-serif;
+}
+
+#root {
+    /*  */
+    height: 100vh;
+
+    /* positioning puzzle & buttons */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* puzzle pieces/tiles */
+.tile {
+    width: 60px;
+    height: 60px;
+    background: #35ff64;
+    /*color: #fff;*/
+
+    border: 2px solid #222;
+    margin: 4px;
+
+    /* center text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* zero/blank tile */
+#_0 {
+    background: #ccc;
+    color: #ccc;
+    border: none;
+}
+
+/*  */
+#puzzle-container {
+    
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    /*  */
+    margin: 24px 0;
+}
