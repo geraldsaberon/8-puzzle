@@ -1,7 +1,10 @@
-const PUZZLE_CONTAINER = document.getElementById("puzzle-container")
+const PUZZLE_CONTAINER = document.getElementById("puzzle-container");
+let RANDOM_MOVES = 3; // Generate puzzle permutation RANDOM_MOVES away from goal
 
-// create puzzle tiles
+
 function drawTiles() {
+    // create puzzle tiles
+    PUZZLE_CONTAINER.innerHTML = ""
     let tiles = []
     let tile;
     for (let i=1; i<=3; i++) {
@@ -16,32 +19,30 @@ function drawTiles() {
             PUZZLE_CONTAINER.appendChild(tile);    
         }
     }
+
+    //  add tile number and move function
+    for (let i=0; i<9; i++) {
+        tiles[i].id = `_${i}`;
+        tiles[i].textContent = i;
+        tiles[i].onclick = moveTile;
+    }
+
     return tiles;
 }
-
 let tiles = drawTiles();
 
 
-//  add tile number and move function
-for (let i=0; i<9; i++) {
-    tiles[i].id = `_${i}`;
-    tiles[i].textContent = i;
-    tiles[i].onclick = moveTile;
-}
-
-
-//
-let blankTile = tiles[0];
-
+let col, row, blankTile, blankCol, blankRow, x;
 function moveTile() {
+    blankTile = tiles.find((tile) => tile.textContent == 0)
     // console.log("number", this.textContent, ", gridColumn", this.style.gridColumn, ", gridRow", this.style.gridRow)
-    let col = parseInt(this.style.gridColumn);
-    let row = parseInt(this.style.gridRow);
-    let emptycol = parseInt(blankTile.style.gridColumn);
-    let emptyrow = parseInt(blankTile.style.gridRow);
-    let x = (col+row)-(emptycol+emptyrow)
+    col = parseInt(this.style.gridColumn);
+    row = parseInt(this.style.gridRow);
+    blankCol = parseInt(blankTile.style.gridColumn);
+    blankRow = parseInt(blankTile.style.gridRow);
+    x = (col+row)-(blankCol+blankRow)
     console.log(x)
-    if ((x == 1 || x == -1) && (col == emptycol || row == emptyrow)) {
+    if ((x == 1 || x == -1) && (col == blankCol || row == blankRow)) {
         [this.style.gridColumn, blankTile.style.gridColumn] = [blankTile.style.gridColumn, this.style.gridColumn];
         [this.style.gridRow, blankTile.style.gridRow] = [blankTile.style.gridRow, this.style.gridRow];
     }
