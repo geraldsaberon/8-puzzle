@@ -27,6 +27,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    cursor: pointer;
 }
 
 /* zero/blank tile */
@@ -34,6 +36,7 @@
     background: #ccc;
     color: #ccc;
     border: none;
+    cursor: default;
 }
 
 /*  */
