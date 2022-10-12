@@ -11,11 +11,12 @@
 
 /* puzzle pieces/tiles */
 .tile {
-    width: 100px;
-    height: 100px;
-    background: #35ff64;
-    border: 2px solid #222;
-
+    width: 120px;
+    height: 120px;
+    background: #1faa6a;
+    /*border: 2px solid #222;*/
+    border-radius: 4px;
+    color: #fff;
     font-size: 2rem;
 
     /* center text */
@@ -41,7 +42,7 @@
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
     align-items: center;
-    grid-gap: 2px;
+    grid-gap: 4px;
     /*  */
     margin: 24px 0;
 }
