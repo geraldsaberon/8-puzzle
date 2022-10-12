@@ -101,5 +101,40 @@ function getPuzzleState() {
 
 // randomize position of tiles
 function randomize() {
-    console.log("hello")
+    tiles = drawTiles()
+    const state = shuffleArray();
+    // const state = [1,2,5,3,4,8,6,0,7]
+    for (let i=0; i<9; i++) {
+        tiles[i].textContent = state[i];
+        tiles[i].id = `_${state[i]}`;
+        PUZZLE_CONTAINER.appendChild(tiles[i])
+    }
 }
+
+
+// generate puzzle permutation
+function shuffleArray(arr=[0,1,2,3,4,5,6,7,8]) {
+    let a = arr.sort((a, b) => 0.5 - Math.random());
+    while (!checkSolvable(a)) {
+        a = arr.sort((a, b) => 0.5 - Math.random());
+    } 
+    return a;
+}
+
+
+// checks whether puzzle permutation is solvable
+function checkSolvable(state) {
+    var pos = state.indexOf(0);
+    var _state = state.slice();
+    _state.splice(pos,1);
+    var count = 0;
+    for (var i = 0; i < _state.length; i++) {
+        for (var j = i + 1; j < _state.length; j++) {
+            if (_state[i] > _state[j]) {
+                count++;
+            }
+        }
+    }
+    return count % 2 === 0;
+}
+
