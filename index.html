@@ -18,7 +18,7 @@
             <!-- puzzle tiles here -->
         </div>
         <div id="buttons">
-            <button type="button" class="btn btn-sm btn-success">
+            <button type="button" class="btn btn-sm btn-success" onclick="solve(BFS(getPuzzleState()))">
                 <i style="margin-right: 4px;" class="bi bi-play-fill"></i>
                 Solve
             </button>
@@ -30,5 +30,6 @@
     </div>
 
     <script src="index.js" type="text/javascript"></script>
+    <script src="bfs.js" type="text/javascript"></script>
 </body>
 </html>

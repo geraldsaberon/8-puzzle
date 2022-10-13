@@ -95,15 +95,15 @@ function getPuzzleState() {
     ps.forEach((tile) => {
         state[m[tile[0]]] = tile[1];
     })
+    state = state.map(el => parseInt(el));
     return state
 }
 
 
 // randomize position of tiles
-function randomize() {
-    tiles = drawTiles()
-    const state = shuffleArray();
-    // const state = [1,2,5,3,4,8,6,0,7]
+function randomize(state=shuffleArray()) {
+    tiles = drawTiles();
+    // const state = shuffleArray();
     for (let i=0; i<9; i++) {
         tiles[i].textContent = state[i];
         tiles[i].id = `_${state[i]}`;
