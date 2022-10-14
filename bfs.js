@@ -41,6 +41,8 @@ function get_neighbors(state) {
 
 
 function BFS(s, goal=[0,1,2,3,4,5,6,7,8]) { // s is starting state.
+    let startTime = performance.now();
+
     let level = {s: 0};
     let parent = Object();
     parent[s] = null;
@@ -80,6 +82,9 @@ function BFS(s, goal=[0,1,2,3,4,5,6,7,8]) { // s is starting state.
         sol.push(to_add);
         current_key = parent[current_key];
     }
+
+    let endTime = performance.now()
+    console.log(`Found solution in ${(endTime-startTime)/1000} seconds`)
 
     return sol.reverse();
 }
