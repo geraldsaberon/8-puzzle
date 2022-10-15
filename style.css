@@ -4,7 +4,6 @@
 
     /* positioning puzzle & buttons */
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -45,4 +44,27 @@
     grid-gap: 4px;
     /*  */
     margin: 24px 0;
+}
+
+/**/
+#top-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+#win-notif {
+    display: flex;
+    align-items: center;
+}
+
+#moves-container{
+    padding: 4px 16px;
+    border-radius: 4px;
+    border: 1px solid #bbb;
+    font-size: 0.8rem;
+}
+
+/* moves counter */
+#moves {
+    font-size: 1.5rem;
 }
