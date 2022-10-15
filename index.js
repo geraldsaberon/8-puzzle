@@ -1,5 +1,5 @@
 const PUZZLE_CONTAINER = document.getElementById("puzzle-container");
-const RANDOM_MOVES = 3; // Generate puzzle permutation RANDOM_MOVES away from goal
+let BUTTONS = document.getElementsByClassName("btn");
 
 
 function drawTiles() {
@@ -8,7 +8,7 @@ function drawTiles() {
     let tiles = []
     let tile;
     for (let i=1; i<=3; i++) {
-        for (let j=1; j<=3; j++){
+        for (let j=1; j<=3; j++) {
             tile = document.createElement("div");
             tile.className = "tile";
             
@@ -40,7 +40,6 @@ function moveTile() {
     blankCol = parseInt(blankTile.style.gridColumn);
     blankRow = parseInt(blankTile.style.gridRow);
     x = (col+row)-(blankCol+blankRow)
-    console.log(x)
     if ((x == 1 || x == -1) && (col == blankCol || row == blankRow)) {
         [this.style.gridColumn, blankTile.style.gridColumn] = [blankTile.style.gridColumn, this.style.gridColumn];
         [this.style.gridRow, blankTile.style.gridRow] = [blankTile.style.gridRow, this.style.gridRow];
@@ -138,3 +137,9 @@ function checkSolvable(state) {
     return count % 2 === 0;
 }
 
+
+function disableBtns(t=true) {
+    for (let i in BUTTONS) {
+        BUTTONS[i].disabled = t;
+    }
+}

@@ -1,6 +1,3 @@
-// const START_STATE = [8, 6, 7, 2, 5, 4, 3, 0, 1]; // hardest puzzle state. requires max moves of 31
-const START_STATE = [1,2,5,3,0,4,6,7,8];
-
 function get_neighbors(state) {
     let zero_pos;
     let state_copy;
@@ -90,9 +87,8 @@ function BFS(s, goal=[0,1,2,3,4,5,6,7,8]) { // s is starting state.
 }
 
 
-let BFS_sol = BFS(START_STATE);
-
 function solve(seq) {
+    disableBtns();
     seq.forEach((arr, index) => {
         setTimeout(() => {
             tiles = drawTiles();
@@ -101,6 +97,9 @@ function solve(seq) {
                 tiles[i].textContent = arr[i];
                 tiles[i].id = `_${arr[i]}`;
                 PUZZLE_CONTAINER.appendChild(tiles[i])
+            }
+            if (index == seq.length-1) {
+                disableBtns(false);
             }
         }, index * 200);
     });
