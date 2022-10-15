@@ -87,7 +87,9 @@ function BFS(s, goal=[0,1,2,3,4,5,6,7,8]) { // s is starting state.
 }
 
 
+let _moves_count;
 function solve(seq) {
+    _moves_count = -1;
     disableBtns();
     seq.forEach((arr, index) => {
         setTimeout(() => {
@@ -98,9 +100,11 @@ function solve(seq) {
                 tiles[i].id = `_${arr[i]}`;
                 PUZZLE_CONTAINER.appendChild(tiles[i])
             }
+            _moves_count += 1;
+            MOVES_COUNTER.textContent = _moves_count;
             if (index == seq.length-1) {
                 disableBtns(false);
             }
-        }, index * 200);
+        }, index * SOLVE_SPEED);
     });
 }

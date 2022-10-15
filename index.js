@@ -1,5 +1,7 @@
 const PUZZLE_CONTAINER = document.getElementById("puzzle-container");
-let BUTTONS = document.getElementsByClassName("btn");
+const BUTTONS = document.getElementsByClassName("btn");
+const MOVES_COUNTER = document.getElementById("moves");
+const SOLVE_SPEED = 175; // milliseconds
 
 
 function drawTiles() {
@@ -32,7 +34,13 @@ let tiles = drawTiles();
 
 
 let col, row, blankTile, blankCol, blankRow, x;
+let moves_count = 0;
 function moveTile() {
+    if (_moves_count > 0) {
+        MOVES_COUNTER.textContent = 0;
+        moves_count = 0;
+        _moves_count = -1; // BFS solve move count;
+    }
     blankTile = tiles.find((tile) => tile.textContent == 0)
     // console.log("number", this.textContent, ", gridColumn", this.style.gridColumn, ", gridRow", this.style.gridRow)
     col = parseInt(this.style.gridColumn);
@@ -43,6 +51,8 @@ function moveTile() {
     if ((x == 1 || x == -1) && (col == blankCol || row == blankRow)) {
         [this.style.gridColumn, blankTile.style.gridColumn] = [blankTile.style.gridColumn, this.style.gridColumn];
         [this.style.gridRow, blankTile.style.gridRow] = [blankTile.style.gridRow, this.style.gridRow];
+        moves_count += 1;
+        MOVES_COUNTER.textContent = moves_count;
     }
 }
 
@@ -101,6 +111,8 @@ function getPuzzleState() {
 
 // randomize position of tiles
 function randomize(state=shuffleArray()) {
+    moves_count = 0;
+    MOVES_COUNTER.textContent = 0;
     tiles = drawTiles();
     // const state = shuffleArray();
     for (let i=0; i<9; i++) {
