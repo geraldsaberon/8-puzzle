@@ -24,13 +24,15 @@
     align-items: center;
 
     cursor: pointer;
+    user-select: none;
 }
 
 /* zero/blank tile */
 #_0 {
-    background: #ccc;
-    color: #ccc;
-    border: none;
+    background: #fff;
+    color: #fff;
+    border: 1px solid #aaa;
+    /*border: none;*/
     cursor: default;
 }
 
