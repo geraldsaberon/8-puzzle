@@ -105,6 +105,7 @@ function solve(seq) {
             MOVES_COUNTER.textContent = _moves_count;
             if (index == seq.length-1) {
                 disableBtns(false);
+                WIN_NOTIF.hidden = false;
             }
         }, index * SOLVE_SPEED);
     });

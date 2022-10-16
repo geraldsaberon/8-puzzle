@@ -1,6 +1,7 @@
 const PUZZLE_CONTAINER = document.getElementById("puzzle-container");
 const BUTTONS = document.getElementsByClassName("btn");
 const MOVES_COUNTER = document.getElementById("moves");
+const WIN_NOTIF = document.getElementById("win-notif");
 const SOLVE_SPEED = 175; // milliseconds
 
 
@@ -53,6 +54,11 @@ function moveTile() {
         [this.style.gridRow, blankTile.style.gridRow] = [blankTile.style.gridRow, this.style.gridRow];
         moves_count += 1;
         MOVES_COUNTER.textContent = moves_count;
+        if (getPuzzleState().toString() ==  "0,1,2,3,4,5,6,7,8") {
+            WIN_NOTIF.hidden = false;
+        } else {
+            WIN_NOTIF.hidden = true;
+        }
     }
 }
 
@@ -113,6 +119,7 @@ function getPuzzleState() {
 function randomize(state=shuffleArray()) {
     moves_count = 0;
     MOVES_COUNTER.textContent = 0;
+    WIN_NOTIF.hidden = true;
     tiles = drawTiles();
     // const state = shuffleArray();
     for (let i=0; i<9; i++) {
