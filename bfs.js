@@ -51,14 +51,15 @@ function BFS(s, goal=[0,1,2,3,4,5,6,7,8]) { // s is starting state.
     while (frontier.length != 0) {
         next = [];
         for (let u of frontier) {
+            if (u.toString() == goal.toString()) {
+                sol_found = true;
+                break;
+            }
             for (let v of get_neighbors(u)) {
                 if (!(v in level)) {
                     level[v] = i;
                     parent[v] = u.toString();
                     next.push(v);
-                }
-                if (v.toString() == goal.toString()) {
-                    sol_found = true;
                 }
             }
         }
