@@ -37,23 +37,29 @@ let tiles = drawTiles();
 let col, row, blankTile, blankCol, blankRow, x;
 let moves_count = 0;
 function moveTile() {
-    if (_moves_count > 0) {
-        MOVES_COUNTER.textContent = 0;
-        moves_count = 0;
-        _moves_count = -1; // BFS solve move count;
-    }
     blankTile = tiles.find((tile) => tile.textContent == 0)
-    // console.log("number", this.textContent, ", gridColumn", this.style.gridColumn, ", gridRow", this.style.gridRow)
     col = parseInt(this.style.gridColumn);
     row = parseInt(this.style.gridRow);
     blankCol = parseInt(blankTile.style.gridColumn);
     blankRow = parseInt(blankTile.style.gridRow);
     x = (col+row)-(blankCol+blankRow)
     if ((x == 1 || x == -1) && (col == blankCol || row == blankRow)) {
+        // reset move counter after auto solving 
+        if (_moves_count > 0) {
+            MOVES_COUNTER.textContent = 0;
+            moves_count = 0;
+            _moves_count = -1; // BFS solve move count;
+        }
+
+        // move tile
         [this.style.gridColumn, blankTile.style.gridColumn] = [blankTile.style.gridColumn, this.style.gridColumn];
         [this.style.gridRow, blankTile.style.gridRow] = [blankTile.style.gridRow, this.style.gridRow];
+        
+        // increment move counter
         moves_count += 1;
         MOVES_COUNTER.textContent = moves_count;
+        
+        // check if puzzle state is solved
         if (getPuzzleState().toString() ==  "0,1,2,3,4,5,6,7,8") {
             WIN_NOTIF.hidden = false;
         } else {
