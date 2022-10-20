@@ -1,8 +1,8 @@
 const PUZZLE_CONTAINER = document.getElementById("puzzle-container");
-const BUTTONS = document.getElementsByClassName("btn");
+const BUTTONS = document.getElementsByClassName("pctrl");
 const MOVES_COUNTER = document.getElementById("moves");
 const WIN_NOTIF = document.getElementById("win-notif");
-const SOLVE_SPEED = 175; // milliseconds
+const SOLVE_SPEED = 150; // milliseconds
 
 
 function drawTiles() {

@@ -28,13 +28,19 @@
                 <!-- puzzle tiles here -->
             </div>
             <div id="buttons">
-                <button type="button" class="btn btn-sm btn-outline-success" onclick="solve(BFS(getPuzzleState()))">
-                    <i class="bi bi-check2"></i>
-                    Solve
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-primary" onclick="randomize()">
+                <div id="solve-button">
+                    <button type="button" class="btn btn-sm btn-outline-success pctrl" onclick="solve(BFS(getPuzzleState()))">
+                        <i class="bi bi-check2"></i>
+                        Solve
+                    </button>
+                    <select id="algo-list" class="form-select form-select-sm pctrl">
+                        <option value="BFS" selected>BFS</option>
+                        <option value="A*">A*</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-primary pctrl" onclick="randomize()">
                     <i class="bi bi-shuffle"></i>
-                    Randomize
+                    <!-- Randomize -->
                 </button>
             </div>
         </div>
