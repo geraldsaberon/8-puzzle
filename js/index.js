@@ -168,3 +168,35 @@ function disableBtns(t=true) {
         BUTTONS[i].disabled = t;
     }
 }
+
+
+let _moves_count;
+function solve(algo) {
+    let seq;
+    if (algo == "BFS") {
+        seq = BFS(getPuzzleState());
+    } else if (algo == "A*"){
+        seq = aStarSearch(getPuzzleState());
+    } else {
+        return;
+    }
+    _moves_count = -1;
+    disableBtns();
+    seq.forEach((arr, index) => {
+        setTimeout(() => {
+            tiles = drawTiles();
+            // rearrange tiles based on arr
+            for (let i=0; i<9; i++) {
+                tiles[i].textContent = arr[i];
+                tiles[i].id = `_${arr[i]}`;
+                PUZZLE_CONTAINER.appendChild(tiles[i])
+            }
+            _moves_count += 1;
+            MOVES_COUNTER.textContent = _moves_count;
+            if (index == seq.length-1) {
+                disableBtns(false);
+                WIN_NOTIF.hidden = false;
+            }
+        }, index * SOLVE_SPEED);
+    });
+}
