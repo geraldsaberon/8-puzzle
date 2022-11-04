@@ -122,12 +122,17 @@ function getPuzzleState() {
 
 
 // randomize position of tiles
-function randomize(state=shuffleArray()) {
+function randomize(seed=Math.random()) {
     moves_count = 0;
     MOVES_COUNTER.textContent = 0;
     WIN_NOTIF.hidden = true;
     tiles = drawTiles();
-    // const state = shuffleArray();
+    let state = shuffleArray(getPuzzleState(), seed);
+
+    while (!isSolvable(state)) {
+        state = shuffleArray(getPuzzleState(), seed++);
+    }
+
     for (let i=0; i<9; i++) {
         tiles[i].textContent = state[i];
         tiles[i].id = `_${state[i]}`;
@@ -136,18 +141,27 @@ function randomize(state=shuffleArray()) {
 }
 
 
-// generate puzzle permutation
-function shuffleArray(arr=[0,1,2,3,4,5,6,7,8]) {
-    let a = arr.sort((a, b) => 0.5 - Math.random());
-    while (!checkSolvable(a)) {
-        a = arr.sort((a, b) => 0.5 - Math.random());
-    } 
-    return a;
+function shuffleArray(array, seed) {
+    let m = array.length, t, i;
+    while (m) {
+        i = Math.floor(_random(seed) * m--);
+        t = array[m];
+        array[m] = array[i];
+        array[i] = t;
+        ++seed;
+    }
+    return array;
+}
+
+
+function _random(seed) {
+    let x = Math.sin(seed++) * 10000; 
+    return x - Math.floor(x);
 }
 
 
 // checks whether puzzle permutation is solvable
-function checkSolvable(state) {
+function isSolvable(state) {
     var pos = state.indexOf(0);
     var _state = state.slice();
     _state.splice(pos,1);
