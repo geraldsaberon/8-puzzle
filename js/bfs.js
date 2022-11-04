@@ -1,4 +1,4 @@
-function get_neighbors(state) {
+function getNeighbors(state) {
     let zero_pos;
     let state_copy;
     let neighbors = [];
@@ -55,7 +55,7 @@ function BFS(s, goal=[0,1,2,3,4,5,6,7,8]) { // s is starting state.
                 sol_found = true;
                 break;
             }
-            for (let v of get_neighbors(u)) {
+            for (let v of getNeighbors(u)) {
                 if (!(v in level)) {
                     level[v] = i;
                     parent[v] = u.toString();
