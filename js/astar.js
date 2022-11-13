@@ -1,47 +1,39 @@
-function aStarSearch(start) {
-    /* A* search algorithm adapted from CSC173 lecture slides "Informed Search"*/
+function aStarSearch(start, goal=[0,1,2,3,4,5,6,7,8]) {
     let startTime = performance.now();
-    const goal = [0,1,2,3,4,5,6,7,8];
-    let openSet = [new Node(start, null, 0)];
-    let closedSet = [];
-    let same;
+    let visited = new Map();
+    let q = new PriorityQueue({comparator: (a, b) => a.fn - b.fn});
+    q.queue(new Node(start, null, 0));
     let statesExpanded = 0;
 
-    while (openSet.length != 0) {
-        current = openSet.find(i => i.fn == Math.min(...openSet.map(j => j.fn)));
-        openSet.splice(openSet.indexOf(current), 1);
-        closedSet.push(current);
+    while (q.length > 0) {
+        let current = q.peek();
+        visited.set(current.stateStr, current);
 
-        if (current.state.toString() == goal.toString()) {
-            let endTime = performance.now()
-            console.log(`Found solution in ${(endTime-startTime)/1000} seconds. ${statesExpanded} states expanded`)
+        if (current.stateStr == goal.toString())
             break;
-        }
-        statesExpanded += 1;
-        for (let neighbor of current.neighbors) {
-            same = openSet.concat(closedSet).find(i => i.stateStr == neighbor.stateStr);
-            if (same) {
-                if (neighbor.pathCost < same.pathCost) {
-                    console.log("hello")
-                    openSet.push(neighbor);
-                }
-            } else {
-                openSet.push(neighbor);
-            }
+
+        let neighbors = current.neighbors;
+        q.dequeue();
+        for (let neighbor of neighbors) {
+            statesExpanded += 1;
+            if (!visited.has(neighbor.stateStr)) 
+                q.queue(neighbor);
         }
     }
-
     // reconstruct path
-    let solutionSequence = [goal];
-    let parentMap = Object();
-    closedSet.map(i => parentMap[i.state] = i.parent);
+    let solution = [[0,1,2,3,4,5,6,7,8]];
+    let key = "0,1,2,3,4,5,6,7,8";
+    let current;
 
-    let currentKey = "0,1,2,3,4,5,6,7,8";
-    while (parentMap[currentKey]) {
-        solutionSequence.push(parentMap[currentKey]);
-        currentKey = parentMap[currentKey];
+    while (key != start.toString()) {
+        current = visited.get(key).parent.toString();
+        solution.push(current.split(","));
+        key = current;
     }
-    return solutionSequence.reverse();
+
+    let endTime = performance.now()
+    console.log(`Found solution in ${(endTime-startTime)/1000} seconds. ${statesExpanded} states expanded`)
+    return solution.reverse();
 }
 
 
@@ -57,10 +49,27 @@ function transform2D(a) {
 }
 
 
-// get [row, col] of an element in an array
+// get [row, col] of an item in a 2d array
 function getXY(board, item) {
     for (let i = 0; i < 3; i++)
         for (let j = 0; j < 3; j++)
             if (board[i][j] == item)
                 return [i, j]; 
+}
+
+
+function manhattanDistance(state) {
+    let goal=[0,1,2,3,4,5,6,7,8];
+    let state2D = transform2D(state);
+    let goal2D = transform2D(goal);
+    let distance = 0;
+    let xS, yS, xG, yG;
+    for (let i = 0; i < goal.length; i++) {
+        if (state[i] != 0) {
+            [xS, yS] = getXY(state2D, state[i]);   
+            [xG, yG] = getXY(goal2D, state[i]);
+            distance += Math.abs(xS - xG) + Math.abs(yS - yG);
+        }
+    }
+    return distance
 }

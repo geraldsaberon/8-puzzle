@@ -47,10 +47,12 @@ function BFS(s, goal=[0,1,2,3,4,5,6,7,8]) { // s is starting state.
     let i = 1;
     let frontier = [s];
     let sol_found = false;
+    let statesExpanded = 0;
 
     while (frontier.length != 0) {
         next = [];
         for (let u of frontier) {
+            statesExpanded += 1;
             if (u.toString() == goal.toString()) {
                 sol_found = true;
                 break;
@@ -82,7 +84,7 @@ function BFS(s, goal=[0,1,2,3,4,5,6,7,8]) { // s is starting state.
     }
 
     let endTime = performance.now()
-    console.log(`Found solution in ${(endTime-startTime)/1000} seconds`)
+    console.log(`Found solution in ${(endTime-startTime)/1000} seconds. ${statesExpanded} states expanded`)
 
     return sol.reverse();
 }
