@@ -1,90 +1,46 @@
-function getNeighbors(state) {
-    let zero_pos;
-    let state_copy;
-    let neighbors = [];
-
-    zero_pos = state.indexOf(0);
-
-    // Move up
-    if (state[zero_pos-3] != undefined) {
-        state_copy = state.slice();
-        [state_copy[zero_pos], state_copy[zero_pos-3]] = [state_copy[zero_pos-3], state_copy[zero_pos]];
-        neighbors.push(state_copy);
-    }
-
-    // Move right
-    if ((zero_pos != 2) && (zero_pos != 5) && (zero_pos != 8)) {
-        state_copy = state.slice();
-        [state_copy[zero_pos], state_copy[zero_pos+1]] = [state_copy[zero_pos+1], state_copy[zero_pos]];
-        neighbors.push(state_copy);
-    }
-
-    // Move down
-    if (state[zero_pos+3] != undefined) {
-        state_copy = state.slice();
-        [state_copy[zero_pos], state_copy[zero_pos+3]] = [state_copy[zero_pos+3], state_copy[zero_pos]];
-        neighbors.push(state_copy);
-    }
-
-    // move left
-    if ((zero_pos != 0) && (zero_pos != 3) && (zero_pos != 6)) {
-        state_copy = state.slice();
-        [state_copy[zero_pos], state_copy[zero_pos-1]] = [state_copy[zero_pos-1], state_copy[zero_pos]];
-        neighbors.push(state_copy);
-    }
-
-    return neighbors
-}
-
-
-function BFS(s, goal=[0,1,2,3,4,5,6,7,8]) { // s is starting state.
+function BFS(start, goal=[0,1,2,3,4,5,6,7,8]) {
     let startTime = performance.now();
-
-    let level = {s: 0};
-    let parent = Object();
-    parent[s] = null;
+    let visited = new Map();
+    let frontier = [new Node(start, null, 0)];
     let next;
-    let i = 1;
-    let frontier = [s];
-    let sol_found = false;
+    let solutionFound = false;
     let statesExpanded = 0;
 
-    while (frontier.length != 0) {
+    while (frontier.length > 0) {
         next = [];
-        for (let u of frontier) {
-            statesExpanded += 1;
-            if (u.toString() == goal.toString()) {
-                sol_found = true;
+        for (let current of frontier) {
+            if (current.stateStr == goal.toString()) {
+                solutionFound = true;
                 break;
             }
-            for (let v of getNeighbors(u)) {
-                if (!(v in level)) {
-                    level[v] = i;
-                    parent[v] = u.toString();
-                    next.push(v);
+            for (let neighbor of current.neighbors) {
+                statesExpanded += 1;
+                if (!visited.has(neighbor.stateStr)) {
+                    visited.set(neighbor.stateStr, neighbor);
+                    next.push(neighbor);
                 }
             }
         }
-        if (sol_found){
+        if (solutionFound)
             break;
-        }
+
         frontier = next;
-        i += 1;
     }
-
-    // tracing parent paths for solution, from starting state -> goal state
-    let sol = [goal];
-    let current_key = '0,1,2,3,4,5,6,7,8';
-    let to_add;
-    while (current_key != s.toString()) {
-        to_add = parent[current_key].split(",");
-        to_add = to_add.map(el => parseInt(el));
-        sol.push(to_add);
-        current_key = parent[current_key];
-    }
-
+    solution = reconstructPath(start, visited);
     let endTime = performance.now()
     console.log(`Found solution in ${(endTime-startTime)/1000} seconds. ${statesExpanded} states expanded`)
+    return solution;
+}
 
-    return sol.reverse();
+
+function reconstructPath(start, visited) {
+    let solution = [[0,1,2,3,4,5,6,7,8]];
+    let key = "0,1,2,3,4,5,6,7,8";
+    let current;
+    while (key != start.toString()) {
+        current = visited.get(key).parent.toString();
+        solution.push(current.split(","));
+        key = current;
+    }
+    return solution.reverse();
 }
