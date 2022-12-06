@@ -1,3 +1,3 @@
 # 8 Puzzle
 
-With Breadth First Search (BFS) solving.
+With automated solving using Breadth-first Search (BFS) and A* search algorithms.
