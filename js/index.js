@@ -2,48 +2,53 @@ const PUZZLE_CONTAINER = document.getElementById("puzzle-container");
 const BUTTONS = document.getElementsByClassName("pctrl");
 const MOVES_COUNTER = document.getElementById("moves");
 const WIN_NOTIF = document.getElementById("win-notif");
-const SOLVE_SPEED = 150; // milliseconds
+const SOLVE_SPEED = 150; // Milliseconds. The time it takes for a tile to move.
 
 
+// create puzzle tiles
 function drawTiles() {
-    // create puzzle tiles
     PUZZLE_CONTAINER.innerHTML = ""
     let tiles = []
     let tile;
-    for (let i=1; i<=3; i++) {
-        for (let j=1; j<=3; j++) {
+
+    for (let i = 1; i <= 3; i++)
+        for (let j = 1; j <= 3; j++) {
             tile = document.createElement("div");
             tile.className = "tile";
-            
-            tile.style.gridColumn = j;
+
             tile.style.gridRow    = i;
+            tile.style.gridColumn = j;
 
             tiles.push(tile);
-            PUZZLE_CONTAINER.appendChild(tile);    
+            PUZZLE_CONTAINER.appendChild(tile);
         }
-    }
+
     //  add tile number and move function
-    for (let i=0; i<9; i++) {
+    for (let i = 0; i < 9; i++) {
         tiles[i].id = `_${i}`;
         tiles[i].textContent = i;
         tiles[i].onclick = moveTile;
     }
+
     return tiles;
 }
 
+
+// The game's 8 tile pieces
 let tiles = drawTiles();
 
 
-let col, row, blankTile, blankCol, blankRow, x;
+let col, row, blankTile, blankCol, blankRow, distance;
 let moves_count = 0;
 function moveTile() {
     blankTile = tiles.find((tile) => tile.textContent == 0)
-    col = parseInt(this.style.gridColumn);
-    row = parseInt(this.style.gridRow);
     blankCol = parseInt(blankTile.style.gridColumn);
     blankRow = parseInt(blankTile.style.gridRow);
-    x = (col+row)-(blankCol+blankRow)
-    if ((x == 1 || x == -1) && (col == blankCol || row == blankRow)) {
+    col = parseInt(this.style.gridColumn);
+    row = parseInt(this.style.gridRow);
+    distance = (col + row) - (blankCol + blankRow);
+
+    if ((distance == 1 || distance == -1) && (col == blankCol || row == blankRow)) {
         // reset move counter after auto solving 
         if (_moves_count > 0) {
             MOVES_COUNTER.textContent = 0;
@@ -54,17 +59,16 @@ function moveTile() {
         // move tile
         [this.style.gridColumn, blankTile.style.gridColumn] = [blankTile.style.gridColumn, this.style.gridColumn];
         [this.style.gridRow, blankTile.style.gridRow] = [blankTile.style.gridRow, this.style.gridRow];
-        
+
         // increment move counter
         moves_count += 1;
         MOVES_COUNTER.textContent = moves_count;
-        
+
         // check if puzzle state is solved
-        if (getPuzzleState().toString() ==  "0,1,2,3,4,5,6,7,8") {
+        if (getPuzzleState().toString() ==  "0,1,2,3,4,5,6,7,8")
             WIN_NOTIF.hidden = false;
-        } else {
+        else
             WIN_NOTIF.hidden = true;
-        }
     }
 }
 
@@ -94,7 +98,6 @@ function moveBlank(dir) {
             [blankTile.style.gridColumn, toSwapWith.style.gridColumn] = [toSwapWith.style.gridColumn, col];
             break
     }
-
 }
 
 
@@ -113,9 +116,7 @@ function getPuzzleState() {
         "3 / 3": 8,
     }
     let ps = tiles.map((tile) => [tile.style.gridArea, tile.textContent]);
-    ps.forEach((tile) => {
-        state[m[tile[0]]] = tile[1];
-    })
+    ps.forEach((tile) => state[m[tile[0]]] = tile[1]);
     state = state.map(el => parseInt(el));
     return state
 }
@@ -127,16 +128,15 @@ function randomize(seed=Math.random()) {
     MOVES_COUNTER.textContent = 0;
     WIN_NOTIF.hidden = true;
     tiles = drawTiles();
-    let state = shuffleArray(getPuzzleState(), seed);
+    let state;
 
-    while (!isSolvable(state)) {
+    do {
         state = shuffleArray(getPuzzleState(), seed++);
-    }
+    } while (!isSolvable(state))
 
-    for (let i=0; i<9; i++) {
+    for (let i = 0; i < 9; i++) {
         tiles[i].textContent = state[i];
         tiles[i].id = `_${state[i]}`;
-        PUZZLE_CONTAINER.appendChild(tiles[i])
     }
 }
 
@@ -164,50 +164,46 @@ function _random(seed) {
 function isSolvable(state) {
     var pos = state.indexOf(0);
     var _state = state.slice();
-    _state.splice(pos,1);
+    _state.splice(pos, 1);
     var count = 0;
-    for (var i = 0; i < _state.length; i++) {
-        for (var j = i + 1; j < _state.length; j++) {
-            if (_state[i] > _state[j]) {
+    for (var i = 0; i < _state.length; i++)
+        for (var j = i + 1; j < _state.length; j++)
+            if (_state[i] > _state[j])
                 count++;
-            }
-        }
-    }
+
     return count % 2 === 0;
 }
 
 
 function disableBtns(t=true) {
-    for (let i in BUTTONS) {
+    for (let i in BUTTONS)
         BUTTONS[i].disabled = t;
-    }
 }
 
 
 let _moves_count;
 function solve(algo) {
     let seq;
-    if (algo == "BFS") {
+    if (algo == "BFS")
         seq = BFS(getPuzzleState());
-    } else if (algo == "A*"){
+    else if (algo == "A*")
         seq = aStarSearch(getPuzzleState());
-    } else {
+    else
         return;
-    }
+
     _moves_count = -1;
     disableBtns();
     seq.forEach((arr, index) => {
         setTimeout(() => {
             tiles = drawTiles();
             // rearrange tiles based on arr
-            for (let i=0; i<9; i++) {
+            for (let i = 0; i < 9; i++) {
                 tiles[i].textContent = arr[i];
                 tiles[i].id = `_${arr[i]}`;
-                PUZZLE_CONTAINER.appendChild(tiles[i])
             }
             _moves_count += 1;
             MOVES_COUNTER.textContent = _moves_count;
-            if (index == seq.length-1) {
+            if (index == seq.length - 1) {
                 disableBtns(false);
                 WIN_NOTIF.hidden = false;
             }
