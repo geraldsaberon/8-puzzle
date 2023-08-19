@@ -57,6 +57,3 @@ class Node {
         return false
     }
 }
-
-// get [row, col of an item in array of length 9, as if it was a 3x3 array
-const getXY = (board, item) => [Math.floor(board.indexOf(item)/3), board.indexOf(item)%3]

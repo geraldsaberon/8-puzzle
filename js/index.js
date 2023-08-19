@@ -73,34 +73,6 @@ function moveTile() {
 }
 
 
-// moves blank tile [LEFT, RIGHT, UP, DOWN]
-function moveBlank(dir) {
-    let toSwapWith;
-    blankTile = tiles.find((tile) => tile.textContent == 0)
-    col = blankTile.style.gridColumn
-    row = blankTile.style.gridRow
-
-    switch (dir) {
-        case "Up":
-            toSwapWith = tiles.find((tile) => (tile.style.gridRow == parseInt(row)-1) && (tile.style.gridColumn == col));
-            [blankTile.style.gridRow, toSwapWith.style.gridRow] = [toSwapWith.style.gridRow, row];
-            break
-        case "Right":
-            toSwapWith = tiles.find((tile) => (tile.style.gridRow == row) && (tile.style.gridColumn == parseInt(col)+1));
-            [blankTile.style.gridColumn, toSwapWith.style.gridColumn] = [toSwapWith.style.gridColumn, col];
-            break
-        case "Down":
-            toSwapWith = tiles.find((tile) => (tile.style.gridRow == parseInt(row)+1) && (tile.style.gridColumn == col));
-            [blankTile.style.gridRow, toSwapWith.style.gridRow] = [toSwapWith.style.gridRow, row];
-            break
-        case "Left":
-            toSwapWith = tiles.find((tile) => (tile.style.gridRow == row) && (tile.style.gridColumn == parseInt(col)-1));
-            [blankTile.style.gridColumn, toSwapWith.style.gridColumn] = [toSwapWith.style.gridColumn, col];
-            break
-    }
-}
-
-
 // get current puzzle state
 function getPuzzleState() {
     let state = [];
@@ -123,7 +95,7 @@ function getPuzzleState() {
 
 
 // randomize position of tiles
-function randomize(seed=Math.random()) {
+function randomizePuzzle(seed=Math.random()) {
     moves_count = 0;
     MOVES_COUNTER.textContent = 0;
     WIN_NOTIF.hidden = true;
@@ -138,25 +110,6 @@ function randomize(seed=Math.random()) {
         tiles[i].textContent = state[i];
         tiles[i].id = `_${state[i]}`;
     }
-}
-
-
-function shuffleArray(array, seed) {
-    let m = array.length, t, i;
-    while (m) {
-        i = Math.floor(_random(seed) * m--);
-        t = array[m];
-        array[m] = array[i];
-        array[i] = t;
-        ++seed;
-    }
-    return array;
-}
-
-
-function _random(seed) {
-    let x = Math.sin(seed++) * 10000; 
-    return x - Math.floor(x);
 }
 
 
