@@ -1,7 +1,6 @@
 const PUZZLE_CONTAINER = document.getElementById("puzzle-container");
 const BUTTONS = document.getElementsByClassName("pctrl");
 const MOVES_COUNTER = document.getElementById("moves");
-const WIN_NOTIF = document.getElementById("win-notif");
 const SOLVE_SPEED = 150; // Milliseconds. The time it takes for a tile to move.
 
 
@@ -63,12 +62,6 @@ function moveTile() {
         // increment move counter
         moves_count += 1;
         MOVES_COUNTER.textContent = moves_count;
-
-        // check if puzzle state is solved
-        if (getPuzzleState().toString() ==  "0,1,2,3,4,5,6,7,8")
-            WIN_NOTIF.hidden = false;
-        else
-            WIN_NOTIF.hidden = true;
     }
 }
 
@@ -98,7 +91,6 @@ function getPuzzleState() {
 function randomizePuzzle(seed=Math.random()) {
     moves_count = 0;
     MOVES_COUNTER.textContent = 0;
-    WIN_NOTIF.hidden = true;
     tiles = drawTiles();
     let state;
 
@@ -158,7 +150,6 @@ function solve(algo) {
             MOVES_COUNTER.textContent = _moves_count;
             if (index == seq.length - 1) {
                 disableBtns(false);
-                WIN_NOTIF.hidden = false;
             }
         }, index * SOLVE_SPEED);
     });
