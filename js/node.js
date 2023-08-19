@@ -10,26 +10,15 @@ class Node {
         let state_copy;
         let neighbors = [];
         zero_pos = this.state.indexOf(0);
-        if (this.state[zero_pos-3] != undefined) {
+
+        for (let m of [-3, -1, 1, 3]) {
             state_copy = this.state.slice();
-            [state_copy[zero_pos], state_copy[zero_pos-3]] = [state_copy[zero_pos-3], state_copy[zero_pos]];
-            neighbors.push(new Node(state_copy, this.state, this.pathCost+1));
+            if (Node.isValidMove(state_copy, m)) {
+                [state_copy[zero_pos], state_copy[zero_pos + m]] = [state_copy[zero_pos + m], state_copy[zero_pos]];
+                neighbors.push(new Node(state_copy, this.state, this.pathCost+1));
+            }
         }
-        if ((zero_pos != 2) && (zero_pos != 5) && (zero_pos != 8)) {
-            state_copy = this.state.slice();
-            [state_copy[zero_pos], state_copy[zero_pos+1]] = [state_copy[zero_pos+1], state_copy[zero_pos]];
-            neighbors.push(new Node(state_copy, this.state, this.pathCost+1));
-        }
-        if (this.state[zero_pos+3] != undefined) {
-            state_copy = this.state.slice();
-            [state_copy[zero_pos], state_copy[zero_pos+3]] = [state_copy[zero_pos+3], state_copy[zero_pos]];
-            neighbors.push(new Node(state_copy, this.state, this.pathCost+1));
-        }
-        if ((zero_pos != 0) && (zero_pos != 3) && (zero_pos != 6)) {
-            state_copy = this.state.slice();
-            [state_copy[zero_pos], state_copy[zero_pos-1]] = [state_copy[zero_pos-1], state_copy[zero_pos]];
-            neighbors.push(new Node(state_copy, this.state, this.pathCost+1));
-        }
+
         return neighbors;
     }
 
@@ -53,6 +42,19 @@ class Node {
         }
 
         return distance
+    }
+
+    static isValidMove(state, move) {
+        let zero_pos = state.indexOf(0)
+
+        if (move ==  1 && ![2, 5, 8].includes(zero_pos) ||
+            move == -1 && ![0, 3, 6].includes(zero_pos) ||
+            ((move == 3 || move == -3) && state[zero_pos + move]))
+        {
+            return true
+        }
+
+        return false
     }
 }
 
