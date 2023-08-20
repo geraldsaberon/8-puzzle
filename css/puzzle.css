@@ -1,13 +1,3 @@
-#root {
-    /*  */
-    height: 100vh;
-
-    /* positioning puzzle & buttons */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 /* puzzle pieces/tiles */
 .tile {
     width: 120px;
@@ -29,16 +19,13 @@
 
 /* zero/blank tile */
 #_0 {
-    background: #fff;
-    color: #fff;
+    background: transparent;
     border: 1px solid #aaa;
-    /*border: none;*/
     cursor: default;
 }
 
 /*  */
 #puzzle-container {
-    
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
@@ -87,7 +74,7 @@
 #algo-list {
     display: inline-block;
     width: auto;
-    background-color: #fff;
+    background-color: transparent;
     border-color: #6c757d;
 }
 
