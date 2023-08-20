@@ -1,7 +1,12 @@
+:root {
+    --tsize: 120px;
+}
+
+
 /* puzzle pieces/tiles */
 .tile {
-    width: 120px;
-    height: 120px;
+    width: var(--tsize);
+    height: var(--tsize);
     background: #1faa6a;
     /*border: 2px solid #222;*/
     border-radius: 4px;
