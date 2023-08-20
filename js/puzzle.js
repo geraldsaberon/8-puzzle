@@ -1,156 +1,97 @@
-const PUZZLE_CONTAINER = document.getElementById("puzzle-container");
-const BUTTONS = document.getElementsByClassName("pctrl");
-const MOVES_COUNTER = document.getElementById("moves");
-const SOLVE_SPEED = 150; // Milliseconds. The time it takes for a tile to move.
-
-
-// create puzzle tiles
-function drawTiles() {
-    PUZZLE_CONTAINER.innerHTML = ""
-    let tiles = []
-    let tile;
-
-    for (let i = 1; i <= 3; i++)
-        for (let j = 1; j <= 3; j++) {
-            tile = document.createElement("div");
-            tile.className = "tile";
-
-            tile.style.gridRow    = i;
-            tile.style.gridColumn = j;
-
-            tiles.push(tile);
-            PUZZLE_CONTAINER.appendChild(tile);
-        }
-
-    //  add tile number and move function
-    for (let i = 0; i < 9; i++) {
-        tiles[i].id = `_${i}`;
-        tiles[i].textContent = i;
-        tiles[i].onclick = moveTile;
+class Puzzle {
+    constructor(container) {
+        this.container = container // root element to display the puzzle's tiles
+        this.state = [0,1,2,3,4,5,6,7,8]
+        this.shuffle()
+        this.solve_speed = 150 // milliseconds between tile moves when automated solving
     }
 
-    return tiles;
-}
-
-
-// The game's 8 tile pieces
-let tiles = drawTiles();
-
-
-let col, row, blankTile, blankCol, blankRow, distance;
-let moves_count = 0;
-function moveTile() {
-    blankTile = tiles.find((tile) => tile.textContent == 0)
-    blankCol = parseInt(blankTile.style.gridColumn);
-    blankRow = parseInt(blankTile.style.gridRow);
-    col = parseInt(this.style.gridColumn);
-    row = parseInt(this.style.gridRow);
-    distance = (col + row) - (blankCol + blankRow);
-
-    if ((distance == 1 || distance == -1) && (col == blankCol || row == blankRow)) {
-        // reset move counter after auto solving 
-        if (_moves_count > 0) {
-            MOVES_COUNTER.textContent = 0;
-            moves_count = 0;
-            _moves_count = -1; // BFS solve move count;
-        }
-
-        // move tile
-        [this.style.gridColumn, blankTile.style.gridColumn] = [blankTile.style.gridColumn, this.style.gridColumn];
-        [this.style.gridRow, blankTile.style.gridRow] = [blankTile.style.gridRow, this.style.gridRow];
-
-        // increment move counter
-        moves_count += 1;
-        MOVES_COUNTER.textContent = moves_count;
-    }
-}
-
-
-// get current puzzle state
-function getPuzzleState() {
-    let state = [];
-    const m = {
-        "1 / 1": 0, 
-        "1 / 2": 1, 
-        "1 / 3": 2, 
-        "2 / 1": 3, 
-        "2 / 2": 4, 
-        "2 / 3": 5, 
-        "3 / 1": 6, 
-        "3 / 2": 7, 
-        "3 / 3": 8,
-    }
-    let ps = tiles.map((tile) => [tile.style.gridArea, tile.textContent]);
-    ps.forEach((tile) => state[m[tile[0]]] = tile[1]);
-    state = state.map(el => parseInt(el));
-    return state
-}
-
-
-// randomize position of tiles
-function randomizePuzzle(seed=Math.random()) {
-    moves_count = 0;
-    MOVES_COUNTER.textContent = 0;
-    tiles = drawTiles();
-    let state;
-
-    do {
-        state = shuffleArray(getPuzzleState(), seed++);
-    } while (!isSolvable(state))
-
-    for (let i = 0; i < 9; i++) {
-        tiles[i].textContent = state[i];
-        tiles[i].id = `_${state[i]}`;
-    }
-}
-
-
-// checks whether puzzle permutation is solvable
-function isSolvable(state) {
-    var pos = state.indexOf(0);
-    var _state = state.slice();
-    _state.splice(pos, 1);
-    var count = 0;
-    for (var i = 0; i < _state.length; i++)
-        for (var j = i + 1; j < _state.length; j++)
-            if (_state[i] > _state[j])
-                count++;
-
-    return count % 2 === 0;
-}
-
-
-function disableBtns(t=true) {
-    for (let i in BUTTONS)
-        BUTTONS[i].disabled = t;
-}
-
-
-let _moves_count;
-function solve(algo) {
-    let seq;
-    if (algo == "BFS")
-        seq = BFS(getPuzzleState());
-    else if (algo == "A*")
-        seq = aStarSearch(getPuzzleState());
-    else
-        return;
-
-    _moves_count = -1;
-    disableBtns();
-    seq.forEach((arr, index) => {
-        setTimeout(() => {
-            tiles = drawTiles();
-            // rearrange tiles based on arr
-            for (let i = 0; i < 9; i++) {
-                tiles[i].textContent = arr[i];
-                tiles[i].id = `_${arr[i]}`;
+    draw_tiles() {
+        this.tiles = []
+        this.container.innerHTML = ""
+        let tile
+        for (let i = 1; i <= 3; i++) {
+            for (let j = 1; j <= 3; j++){
+                tile = new PuzzleTile(this.state[this.tiles.length], i, j)
+                tile.onclick = (clicked_tile) => this.move_tile(clicked_tile.target)
+                this.tiles.push(tile)
+                this.container.appendChild(tile)
             }
-            _moves_count += 1;
-            MOVES_COUNTER.textContent = _moves_count;
-            if (index == seq.length - 1) {
-                disableBtns(false);
-            }
-        }, index * SOLVE_SPEED);
-    });
+        }
+    }
+
+    move_tile(clicked_tile) {
+        let blank_tile = this.tiles.find(tile => tile.textContent == 0)
+        let blank_tile_num = parseInt(blank_tile.textContent)
+        let blank_tile_row = parseInt(blank_tile.style.gridRow)
+        let blank_tile_col = parseInt(blank_tile.style.gridColumn)
+        let clicked_tile_num = parseInt(clicked_tile.textContent)
+        let clicked_tile_row = parseInt(clicked_tile.style.gridRow)
+        let clicked_tile_col = parseInt(clicked_tile.style.gridColumn)
+        let distance = (clicked_tile_row + clicked_tile_col) - (blank_tile_row + blank_tile_col)
+
+        if (Math.abs(distance) == 1 &&
+            (clicked_tile_row == blank_tile_row ||
+             clicked_tile_col == blank_tile_col))
+        {
+            // move tile. swaps the position of the clicked tile and the blank tile
+            [clicked_tile.style.gridRow, blank_tile.style.gridRow] = [blank_tile_row, clicked_tile_row];
+            [clicked_tile.style.gridColumn, blank_tile.style.gridColumn] = [blank_tile_col, clicked_tile_col];
+            // update this.state
+            let tmp = this.state.indexOf(clicked_tile_num)
+            this.state[this.state.indexOf(blank_tile_num)] = clicked_tile_num
+            this.state[tmp] = blank_tile_num
+        }
+    }
+
+    shuffle() {
+        do {
+            this.state = shuffleArray(this.state, Math.random())
+        } while (!Puzzle.is_solvable(this.state))
+        this.draw_tiles()
+    }
+
+    async solve(algorithm) {
+        let solution
+        if (algorithm == "BFS")
+            solution = BFS(this.state)
+        else if (algorithm == "A*")
+            solution = aStarSearch(this.state)
+        else
+            return
+
+        for (let s of solution) {
+            await sleep(this.solve_speed)
+            this.state = s
+            this.draw_tiles()
+        }
+    }
+
+    static is_solvable(state) {
+        let pos = state.indexOf(0);
+        let _state = state.slice();
+        _state.splice(pos, 1);
+        let count = 0;
+        for (let i = 0; i < _state.length; i++)
+            for (let j = i + 1; j < _state.length; j++)
+                if (_state[i] > _state[j])
+                    count++;
+        return count % 2 === 0;
+    }
 }
+
+
+class PuzzleTile {
+    constructor(num, row, col) {
+        let tile = document.createElement("div")
+        tile.className = "tile"
+        tile.style.gridRow = row
+        tile.style.gridColumn = col
+        tile.textContent = num ? num : ""
+        tile.id = `_${num}`
+        return tile
+    }
+}
+
+
+let puzzle = new Puzzle(document.getElementById("puzzle-container"))

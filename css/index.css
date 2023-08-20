@@ -1,0 +1,9 @@
+#root {
+    /*  */
+    height: 100vh;
+
+    /* positioning puzzle & buttons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
