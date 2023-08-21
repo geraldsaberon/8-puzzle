@@ -23,16 +23,16 @@ function BFS(start, goal=[0,1,2,3,4,5,6,7,8]) {
         }
         frontier = next;
     }
-    solution = reconstructPath(start, visited);
+    solution = reconstructPath(start, visited, goal);
     let endTime = performance.now()
     console.log(`Found solution in ${(endTime-startTime)/1000} seconds. ${statesExpanded} states expanded`)
     return solution;
 }
 
 
-function reconstructPath(start, visited) {
-    let solution = [[0,1,2,3,4,5,6,7,8]];
-    let key = "0,1,2,3,4,5,6,7,8";
+function reconstructPath(start, visited, goal=[0,1,2,3,4,5,6,7,8]) {
+    let solution = [goal];
+    let key = goal.toString();
     let current;
     while (key != start.toString()) {
         current = visited.get(key).parent.toString();
