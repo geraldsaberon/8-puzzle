@@ -2,11 +2,29 @@ class Puzzle {
     constructor(container) {
         this.container = container // root element to display the puzzle's tiles
         this.move_counter = document.getElementById("moves") // the element displaying the move counts
-        this.move_count = -1 // counts the move taken by automated solving
+        this.move_count = -1 // counts the moves taken by automated solving
         this.move_count_user = 0 // counts the moves the user takes (e.g., clicking a tile)
-        this.state = [0,1,2,3,4,5,6,7,8]
+        this._state = [0,1,2,3,4,5,6,7,8]
         this.shuffle()
         this.solve_speed = 150 // milliseconds between tile moves when automated solving
+    }
+
+    get state() {
+        return this._state
+    }
+
+    set state(arr) {
+        if (!is_permutation(arr.slice(), this.state)) {
+            console.log("Not valid puzzle configuration. Must be a permutation of [0,1,2,3,4,5,6,7,8]")
+        }
+        else if (!Puzzle.is_solvable(arr)) {
+            console.log(`Not valid puzzle configuration. [${arr}] is not a solvable configuration.`)
+        }
+        else {
+            this._state = arr
+            this.draw_tiles()
+            console.log(`Puzzle state set to [${arr}]`)
+        }
     }
 
     draw_tiles() {
@@ -53,7 +71,7 @@ class Puzzle {
     shuffle() {
         this.reset_move_count()
         do {
-            this.state = shuffleArray(this.state, Math.random())
+            this._state = shuffleArray(this.state)
         } while (!Puzzle.is_solvable(this.state))
         this.draw_tiles()
     }

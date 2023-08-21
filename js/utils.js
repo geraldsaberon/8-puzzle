@@ -26,3 +26,8 @@ const getXY = (board, item) => [Math.floor(board.indexOf(item)/3), board.indexOf
 
 
 const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+
+
+function is_permutation(arr1, arr2) {
+    return JSON.stringify(arr1.sort()) === JSON.stringify(arr2.sort())
+}
