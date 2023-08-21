@@ -36,7 +36,10 @@ function reconstructPath(start, visited) {
     let current;
     while (key != start.toString()) {
         current = visited.get(key).parent.toString();
-        solution.push(current.split(","));
+        solution.push(
+            current.split(",")
+            .map(n => parseInt(n))
+        );
         key = current;
     }
     return solution.reverse();
