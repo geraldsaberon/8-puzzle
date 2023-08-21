@@ -1,6 +1,9 @@
 class Puzzle {
     constructor(container) {
         this.container = container // root element to display the puzzle's tiles
+        this.move_counter = document.getElementById("moves") // the element displaying the move counts
+        this.move_count = -1 // counts the move taken by automated solving
+        this.move_count_user = 0 // counts the moves the user takes (e.g., clicking a tile)
         this.state = [0,1,2,3,4,5,6,7,8]
         this.shuffle()
         this.solve_speed = 150 // milliseconds between tile moves when automated solving
@@ -41,10 +44,14 @@ class Puzzle {
             let tmp = this.state.indexOf(clicked_tile_num)
             this.state[this.state.indexOf(blank_tile_num)] = clicked_tile_num
             this.state[tmp] = blank_tile_num
+            // update move counter element
+            this.move_count_user += 1
+            this.move_counter.innerHTML = `${this.move_count_user}`
         }
     }
 
     shuffle() {
+        this.reset_move_count()
         do {
             this.state = shuffleArray(this.state, Math.random())
         } while (!Puzzle.is_solvable(this.state))
@@ -52,6 +59,8 @@ class Puzzle {
     }
 
     async solve(algorithm) {
+        this.reset_move_count()
+
         let solution
         if (algorithm == "BFS")
             solution = BFS(this.state)
@@ -64,7 +73,17 @@ class Puzzle {
             await sleep(this.solve_speed)
             this.state = s
             this.draw_tiles()
+            this.move_count += 1
+            this.move_counter.innerHTML = `${this.move_count}`
         }
+    }
+
+    reset_move_count() {
+        /* this.move_count starts of as -1 to offset
+        the solution sequence including the initial/start state */
+        this.move_count = -1
+        this.move_counter.innerHTML = "0"
+        this.move_count_user = 0
     }
 
     static is_solvable(state) {
