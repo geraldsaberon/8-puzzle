@@ -22,7 +22,7 @@ class Puzzle {
 
     move_tile(clicked_tile) {
         let blank_tile = this.tiles.find(tile => tile.textContent == 0)
-        let blank_tile_num = parseInt(blank_tile.textContent)
+        let blank_tile_num = 0
         let blank_tile_row = parseInt(blank_tile.style.gridRow)
         let blank_tile_col = parseInt(blank_tile.style.gridColumn)
         let clicked_tile_num = parseInt(clicked_tile.textContent)
