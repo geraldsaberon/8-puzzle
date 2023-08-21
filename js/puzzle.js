@@ -5,6 +5,7 @@ class Puzzle {
         this.move_count = -1 // counts the moves taken by automated solving
         this.move_count_user = 0 // counts the moves the user takes (e.g., clicking a tile)
         this._state = [0,1,2,3,4,5,6,7,8]
+        this.goal = [0,1,2,3,4,5,6,7,8]
         this.shuffle()
         this.solve_speed = 150 // milliseconds between tile moves when automated solving
     }
@@ -81,9 +82,9 @@ class Puzzle {
 
         let solution
         if (algorithm == "BFS")
-            solution = BFS(this.state)
+            solution = BFS(this.state, this.goal)
         else if (algorithm == "A*")
-            solution = aStarSearch(this.state)
+            solution = aStarSearch(this.state, this.goal)
         else
             return
 

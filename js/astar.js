@@ -2,7 +2,7 @@ function aStarSearch(start, goal=[0,1,2,3,4,5,6,7,8]) {
     let startTime = performance.now();
     let visited = new Map();
     let q = new PriorityQueue({comparator: (a, b) => a.fn - b.fn});
-    q.queue(new Node(start, null, 0));
+    q.queue(new Node(start, null, 0, goal));
     let statesExpanded = 0;
 
     while (q.length > 0) {
