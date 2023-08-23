@@ -15,16 +15,21 @@ class Puzzle {
     }
 
     set state(arr) {
-        if (!is_permutation(arr.slice(), this.state)) {
-            console.log("Not valid puzzle configuration. Must be a permutation of [0,1,2,3,4,5,6,7,8]")
-        }
-        else if (!Puzzle.is_solvable(arr)) {
-            console.log(`Not valid puzzle configuration. [${arr}] is not a solvable configuration.`)
-        }
-        else {
+        if (Puzzle.is_valid_puzzle(arr)) {
             this._state = arr
             this.draw_tiles()
             console.log(`Puzzle state set to [${arr}]`)
+        }
+    }
+
+    get goal() {
+        return this._goal
+    }
+
+    set goal(arr) {
+        if (Puzzle.is_valid_puzzle(arr)) {
+            this._goal = arr
+            console.log(`Puzzle goal set to [${arr}]`)
         }
     }
 
@@ -103,6 +108,20 @@ class Puzzle {
         this.move_count = -1
         this.move_counter.innerHTML = "0"
         this.move_count_user = 0
+    }
+
+    static is_valid_puzzle(arr) {
+        if (!is_permutation(arr.slice(), [0,1,2,3,4,5,6,7,8])) {
+            console.log("Not valid puzzle configuration. Must be a permutation of [0,1,2,3,4,5,6,7,8]")
+            return false
+        }
+        else if (!Puzzle.is_solvable(arr)) {
+            console.log(`Not valid puzzle configuration. [${arr}] is not a solvable configuration.`)
+            return false
+        }
+        else {
+            return true
+        }
     }
 
     static is_solvable(state) {
