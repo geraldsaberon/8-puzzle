@@ -28,6 +28,20 @@ const getXY = (board, item) => [Math.floor(board.indexOf(item)/3), board.indexOf
 const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 
 
-function is_permutation(arr1, arr2) {
-    return JSON.stringify(arr1.sort()) === JSON.stringify(arr2.sort())
+const is_permutation = (arr1, arr2) => JSON.stringify(arr1.sort()) === JSON.stringify(arr2.sort())
+
+
+function reconstructPath(start, visited, goal=[0,1,2,3,4,5,6,7,8]) {
+    let solution = [goal.slice()];
+    let key = goal.toString();
+    let current;
+    while (key != start.toString()) {
+        current = visited.get(key).parent.toString();
+        solution.push(
+            current.split(",")
+            .map(n => parseInt(n))
+        );
+        key = current;
+    }
+    return solution.reverse();
 }
