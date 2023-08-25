@@ -44,6 +44,11 @@
 #top-info {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+#time {
+    margin-bottom: 0;
 }
 
 #win-notif {

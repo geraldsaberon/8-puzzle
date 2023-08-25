@@ -1,6 +1,7 @@
 class Puzzle {
     constructor(container) {
         this.container = container // root element to display the puzzle's tiles
+        this.time_counter = document.getElementById("time")
         this.move_counter = document.getElementById("moves") // the element displaying the move counts
         this.move_count = -1 // counts the moves taken by automated solving
         this.move_count_user = 0 // counts the moves the user takes (e.g., clicking a tile)
@@ -70,7 +71,8 @@ class Puzzle {
             this.state[tmp] = blank_tile_num
             // update move counter element
             this.move_count_user += 1
-            this.move_counter.innerHTML = `${this.move_count_user}`
+            this.move_counter.innerText = `${this.move_count_user}`
+            this.time_counter.innerText = ""
         }
     }
 
@@ -83,6 +85,7 @@ class Puzzle {
     }
 
     solve(algorithm) {
+        this.time_counter.innerText = ""
         this.reset_move_count()
         this.disable_tile_clicks(true)
         disable_buttons(true)
@@ -99,12 +102,13 @@ class Puzzle {
         else return
 
         worker.addEventListener("message", async (message) => {
+            this.time_counter.innerHTML = `Found solution in <b>${message.data.time}</b> seconds`
             for (let s of message.data.solution) {
                 await sleep(this.solve_speed)
                 this.state = s
                 this.draw_tiles()
                 this.move_count += 1
-                this.move_counter.innerHTML = `${this.move_count}`
+                this.move_counter.innerText = `${this.move_count}`
             }
             this.disable_tile_clicks(false)
             disable_buttons(false)
@@ -115,8 +119,9 @@ class Puzzle {
         /* this.move_count starts of as -1 to offset
         the solution sequence including the initial/start state */
         this.move_count = -1
-        this.move_counter.innerHTML = "0"
+        this.move_counter.innerText = "0"
         this.move_count_user = 0
+        this.time_counter.innerText = ""
     }
 
     disable_tile_clicks(b=true) {
