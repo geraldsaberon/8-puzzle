@@ -82,24 +82,29 @@ class Puzzle {
         this.draw_tiles()
     }
 
-    async solve(algorithm) {
+    solve(algorithm) {
         this.reset_move_count()
 
-        let solution
-        if (algorithm == "BFS")
-            solution = BFS(this.state, this.goal)
-        else if (algorithm == "A*")
-            solution = aStarSearch(this.state, this.goal)
-        else
-            return
-
-        for (let s of solution) {
-            await sleep(this.solve_speed)
-            this.state = s
-            this.draw_tiles()
-            this.move_count += 1
-            this.move_counter.innerHTML = `${this.move_count}`
+        let worker
+        if (algorithm == "BFS") {
+            worker = new Worker("js/bfs.js")
+            worker.postMessage({command: "BFS", start: this.state, goal: this.goal})
         }
+        else if (algorithm == "A*") {
+            worker = new Worker("js/astar.js")
+            worker.postMessage({command: "aStarSearch", start: this.state, goal: this.goal})
+        }
+        else return
+
+        worker.addEventListener("message", async (message) => {
+            for (let s of message.data.solution) {
+                await sleep(this.solve_speed)
+                this.state = s
+                this.draw_tiles()
+                this.move_count += 1
+                this.move_counter.innerHTML = `${this.move_count}`
+            }
+        })
     }
 
     reset_move_count() {
