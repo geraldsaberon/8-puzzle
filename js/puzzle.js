@@ -84,6 +84,8 @@ class Puzzle {
 
     solve(algorithm) {
         this.reset_move_count()
+        this.disable_tile_clicks(true)
+        disable_buttons(true)
 
         let worker
         if (algorithm == "BFS") {
@@ -104,6 +106,8 @@ class Puzzle {
                 this.move_count += 1
                 this.move_counter.innerHTML = `${this.move_count}`
             }
+            this.disable_tile_clicks(false)
+            disable_buttons(false)
         })
     }
 
@@ -113,6 +117,10 @@ class Puzzle {
         this.move_count = -1
         this.move_counter.innerHTML = "0"
         this.move_count_user = 0
+    }
+
+    disable_tile_clicks(b=true) {
+        this.container.style.pointerEvents = b ? "none" : "auto"
     }
 
     static is_valid_puzzle(arr) {
