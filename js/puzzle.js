@@ -102,7 +102,7 @@ class Puzzle {
         else return
 
         worker.addEventListener("message", async (message) => {
-            this.time_counter.innerHTML = `Found solution in <b>${message.data.time}</b> seconds`
+            this.time_counter.innerHTML = `Found solution in <b>${message.data.time.toFixed(4)}</b> seconds`
             for (let s of message.data.solution) {
                 await sleep(this.solve_speed)
                 this.state = s
